@@ -33,7 +33,16 @@ function mapTickers(tickersData){
   return result;
 }
 
+function mapTransferrableCoinsInfo(transferrableCoinsInfo){
+  let result = {};
+  for(let coinData of transferrableCoinsInfo.data){
+    result[coinData.assetCode.toLowerCase()] = true;
+  }
+  return result;
+}
+
 module.exports = {
   mapExchangeInfo,
+  mapTransferrableCoinsInfo,
   mapTickers
 };

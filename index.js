@@ -8,6 +8,7 @@ const { intitialize, calculateArbitrage } = require("./getBiData");
 let exchangesCoinData = {};
 let exchangesQuoteData = {};
 let arbitrageData = {};
+let transferrableCoinDetails = {};
 const exchanges = config.exchanges;
 
 
@@ -32,7 +33,7 @@ app.get("/binancebinance", (req, res) => {
 })
 
 async function show() {
-  await intitialize(exchangesCoinData, exchangesQuoteData, exchanges);
+  await intitialize(exchangesCoinData, exchangesQuoteData,transferrableCoinDetails, exchanges);
   filterCommonCoins(exchangesCoinData, "wazirx", "binance");
   startRepeater();
 }
@@ -40,6 +41,7 @@ async function startRepeater() {
   await calculateArbitrage(
     exchangesCoinData,
     exchangesQuoteData,
+    transferrableCoinDetails,
     exchanges,
     arbitrageData,
 		config.threshold

@@ -7,6 +7,10 @@
       "tickers": "/api/v2/tickers",
       "depth": "/api/v2/depth"
     },
+    "otherLinks": {
+      "transferrableToBinanceCoinsUrl": "https://x.wazirx.com/api/v2/thirdparty/asset_transfer/currencies?thirdparty=binance"
+
+    },
     "calculatorPath": "./exchangeBased/wazirx.js",
     "quotes": {
       "normalQuotes": ["wrx", "btc"],
@@ -21,6 +25,9 @@
       "exchangeInfo": "/api/v3/exchangeInfo",
       "tickers": "/api/v3/ticker/bookTicker",
       "depth": "/api/v3/depth"
+    },
+    "otherLinks": {
+      "transferrableToWazirxCoinsUrl": "https://www.binance.com/bapi/asset/v1/public/asset-service/partner/supported-assets?clientId=aEd4v9Cd90"
     },
     "calculatorPath": "./exchangeBased/binance.js",
     "quotes": {

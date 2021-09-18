@@ -2,11 +2,18 @@ const axios = require("axios");
 const exchangeDetails = require("./config/exchangeDetails.json");
 const config = require("./config/config.json");
 
-async function intitialize(exchangesCoinData, exchangesQuoteData, exchanges) {
+async function intitialize(
+  exchangesCoinData,
+  exchangesQuoteData,
+  transferrableCoinDetails,
+  exchanges
+) {
   //sets exchangesCoinData
   for (let exchange of exchanges) {
     exchangesCoinData[exchange] = await getCoinsInfo(exchange);
   }
+
+  transferrableCoinDetails["binanceToWazirx"] = await getTranferrableCoinsInfo("binance");
 
   //sets exchangesQuoteData
   for (let exchange of exchanges) {
@@ -35,9 +42,22 @@ async function getCoinsInfo(exchangeName) {
   return mapExchangeInfo(exchangeInfo, exchangeDetails[exchangeName]);
 }
 
+async function getTranferrableCoinsInfo(exchangeName) {
+  const {
+    mapTransferrableCoinsInfo,
+  } = require(`./exchangeBased/${exchangeName}`);
+  let transferrableCoinsInfo;
+  await axios
+    .get(exchangeDetails.binance.otherLinks.transferrableToWazirxCoinsUrl)
+    .then((res) => (transferrableCoinsInfo = res.data))
+    .catch((err) => console.log(err));
+  return mapTransferrableCoinsInfo(transferrableCoinsInfo);
+}
+
 async function calculateArbitrage(
   exchangesCoinData,
   exchangesQuoteData,
+  transferrableCoinDetails,
   exchanges,
   arbitrageData,
   threshold
@@ -45,16 +65,21 @@ async function calculateArbitrage(
   let mappedTickers = getMappedTickers(await getTickersData(exchanges));
   setQuoteValues(exchangesQuoteData, mappedTickers);
   setCoinValues(exchangesCoinData, exchangesQuoteData, mappedTickers);
-  setArbitrageData(arbitrageData, exchangesCoinData, threshold);
+  setArbitrageData(arbitrageData, exchangesCoinData, transferrableCoinDetails, threshold);
 }
 
 async function getTickersData(exchanges) {
   let tickers = {};
-  await collectTickersData(exchanges).then((res) => {
-    for (let i in exchanges) {
-      tickers[exchanges[i]] = res[i]["data"];
-    }
-  });
+  await collectTickersData(exchanges)
+    .then((res) => {
+      for (let i in exchanges) {
+        tickers[exchanges[i]] = res[i]["data"];
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return;
+    });
   return tickers;
 }
 
@@ -99,27 +124,31 @@ function setQuoteValues(exchangesQuoteData, mappedTickers) {
   }
 }
 
-function setArbitrageData(arbitrageData, exchangesCoinData, threshold) {
+function setArbitrageData(arbitrageData, exchangesCoinData,transferrableCoinDetails, threshold) {
   arbitrageData["wazirxbinance"] = getArbitrageData(
     exchangesCoinData,
+    transferrableCoinDetails,
     "wazirx",
     "binance",
     threshold
   );
   arbitrageData["binancewazirx"] = getArbitrageData(
     exchangesCoinData,
+    transferrableCoinDetails,
     "binance",
     "wazirx",
     threshold
   );
   arbitrageData["wazirxwazirx"] = getArbitrageData(
     exchangesCoinData,
+    transferrableCoinDetails,
     "wazirx",
     "wazirx",
     threshold
   );
   arbitrageData["binancebinance"] = getArbitrageData(
     exchangesCoinData,
+    transferrableCoinDetails,
     "binance",
     "binance",
     threshold
@@ -143,8 +172,7 @@ function setCoinValues(exchangesCoinData, exchangesQuoteData, mappedTickers) {
   }
 }
 
-
-function getArbitrageData(exchangesCoinData, exchange1, exchange2, threshold) {
+function getArbitrageData(exchangesCoinData, transferrableCoinDetails, exchange1, exchange2, threshold) {
   let result = [];
   for (let coin of Object.keys(exchangesCoinData[exchange1])) {
     for (let buyQuote of exchangesCoinData[exchange1][coin]["quotes"]) {
@@ -162,6 +190,7 @@ function getArbitrageData(exchangesCoinData, exchange1, exchange2, threshold) {
             sellQuote,
             sellPrice: sell,
             gain: gain.toPrecision(2),
+            isTransferrable: transferrableCoinDetails["binanceToWazirx"][coin] || false
           };
           result.push(obj);
         }
