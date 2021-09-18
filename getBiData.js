@@ -28,7 +28,10 @@ async function getCoinsInfo(exchangeName) {
   await axios
     .get(apiDetails.baseUrl + apiDetails.exchangeInfo)
     .then((res) => (exchangeInfo = res.data))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      return;
+    });
   return mapExchangeInfo(exchangeInfo, exchangeDetails[exchangeName]);
 }
 
