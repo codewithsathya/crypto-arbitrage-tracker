@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/codewithsathya/crypto-arbitrage-tracker#readme",
   "dependencies": {
-    "axios": "^0.21.4"
+    "axios": "^0.21.4",
+    "binance": "^2.0.12",
+    "express": "^4.17.1"
   }
 }

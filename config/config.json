@@ -1,0 +1,6 @@
+{
+	"exchanges": ["wazirx", "binance"],
+	"mainQuote": "usdt",
+	"refreshTime": 5000,
+	"threshold": 0.1
+}

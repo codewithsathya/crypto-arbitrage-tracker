@@ -1,0 +1,55 @@
+{
+  "wazirx": {
+    "apiDetails": {
+      "baseUrl": "https://api.wazirx.com",
+      "altBaseUrl": "https://x.wazirx.com",
+      "exchangeInfo": "/api/v2/market-status",
+      "tickers": "/api/v2/tickers",
+      "depth": "/api/v2/depth"
+    },
+    "calculatorPath": "./exchangeBased/wazirx.js",
+    "quotes": {
+      "normalQuotes": ["wrx", "btc"],
+      "invertedQuotes": ["inr"],
+      "ignoredQuotes": []
+    }
+  },
+  "binance": {
+    "apiDetails": {
+      "baseUrl": "https://api.binance.com",
+      "altBaseUrl": "https://www.binance.com",
+      "exchangeInfo": "/api/v3/exchangeInfo",
+      "tickers": "/api/v3/ticker/bookTicker",
+      "depth": "/api/v3/depth"
+    },
+    "calculatorPath": "./exchangeBased/binance.js",
+    "quotes": {
+      "normalQuotes": [
+        "btc",
+        "eth",
+        "bnb",
+        "xrp",
+        "trx",
+        "tusd",
+        "usdc",
+        "busd",
+        "usdp",
+        "eur",
+        "gbp",
+        "aud"
+      ],
+      "invertedQuotes": [
+        "ngn",
+        "rub",
+        "try",
+        "idrt",
+        "uah",
+        "bidr",
+        "dai",
+        "brl",
+        "bvnd"
+      ],
+      "ignoredQuotes": ["vai"]
+    }
+  }
+}
