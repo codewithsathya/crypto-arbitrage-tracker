@@ -37,7 +37,6 @@ async function getCoinsInfo(exchangeName) {
     .then((res) => (exchangeInfo = res.data))
     .catch((err) => {
       console.log(err);
-      return;
     });
   return mapExchangeInfo(exchangeInfo, exchangeDetails[exchangeName]);
 }
@@ -78,7 +77,6 @@ async function getTickersData(exchanges) {
     })
     .catch((err) => {
       console.log(err);
-      return;
     });
   return tickers;
 }
