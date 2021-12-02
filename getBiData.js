@@ -122,7 +122,7 @@ function setQuoteValues(exchangesQuoteData, mappedTickers) {
   }
 }
 
-function setArbitrageData(arbitrageData, exchangesCoinData,transferrableCoinDetails, threshold) {
+function setArbitrageData(arbitrageData, exchangesCoinData, transferrableCoinDetails, threshold) {
   arbitrageData["wazirxbinance"] = getArbitrageData(
     exchangesCoinData,
     transferrableCoinDetails,
@@ -190,11 +190,13 @@ function getArbitrageData(exchangesCoinData, transferrableCoinDetails, exchange1
             gain: gain.toPrecision(2),
             isTransferrable: transferrableCoinDetails["binanceToWazirx"][coin] || false
           };
-          result.push(obj);
+          // if (obj.isTransferrable)
+            result.push(obj);
         }
       }
     }
   }
+  result.sort((a, b) => b.gain - a.gain);
   return result;
 }
 
